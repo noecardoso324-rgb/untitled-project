@@ -32,7 +32,7 @@ as $$
 $$;
 
 revoke all on function public.is_nkembo_admin() from public;
-grant execute on function public.is_nkembo_admin() to authenticated;
+grant execute on function public.is_nkembo_admin() to anon, authenticated;
 
 alter table public.profiles enable row level security;
 alter table public.contents enable row level security;
