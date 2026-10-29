@@ -1,21 +1,37 @@
-# TV Nkembo — próximo passo
+# TV Nkembo — configurar o painel de administrador
 
-O site está na raiz do repositório e pode ser publicado como site estático através de GitHub Pages.
+## Preparado no GitHub
+- `admin.html`: login Supabase e gestão de conteúdos (criar, editar, publicar/guardar rascunho, eliminar).
+- `supabase-config.js`: modelo para URL e chave pública do Supabase.
+- `supabase/schema.sql`: tabelas e políticas RLS para limitar gestão a administradores.
+- O botão Admin na página inicial abre `admin.html`.
 
-## Como publicar
-1. Abre **Settings → Pages** neste repositório.
-2. Em **Build and deployment**, escolhe **GitHub Actions** como origem.
-3. Abre o separador **Actions** e verifica a execução “Deploy TV Nkembo to GitHub Pages”.
-4. Quando terminar com sucesso, o GitHub mostra o endereço público do site em Settings → Pages.
+## Passo 1 — criar a base de dados
+1. Cria um projecto em https://supabase.com.
+2. Abre SQL Editor no projecto.
+3. Abre `supabase/schema.sql` neste repositório, copia todo o conteúdo e executa-o.
 
-## O que esta versão já inclui
-- Site responsivo em português de Angola.
-- Catálogo demonstrativo com filtros e pesquisa.
-- Formulário local de demonstração para adicionar/remover cartões.
-- Manifesto e service worker iniciais para experiência instalável/PWA.
+## Passo 2 — ligar o site ao Supabase
+1. No Supabase, abre Project Settings → API (ou Connect).
+2. Copia a Project URL e a chave pública anon/publishable.
+3. Edita `supabase-config.js` no GitHub e substitui os dois valores `COLOCA_AQUI...`.
+4. Nunca uses a chave `service_role` no navegador, no GitHub ou em mensagens.
 
-## O que ainda não está ligado
-- O painel de demonstração guarda os cartões apenas no navegador e não é seguro para gestão real.
-- Não existem ainda autenticação segura, base de dados, upload de vídeos, reprodução real de streams, subscrições nem pagamentos.
-- O botão de contacto precisa do número comercial WhatsApp configurado no ficheiro index.html.
-- Distribui apenas conteúdos próprios ou com direitos/licenças adequados.
+## Passo 3 — criar a conta administradora
+1. No Supabase, abre Authentication → Users e cria/adiciona uma conta com o teu e-mail.
+2. Copia o UUID dessa conta.
+3. No SQL Editor, executa o comando abaixo com os teus valores:
+```sql
+insert into public.profiles (id, email, role)
+values ('UUID_DO_UTILIZADOR', 'TEU_EMAIL', 'admin')
+on conflict (id) do update set email = excluded.email, role = 'admin';
+```
+4. Entra em `admin.html` com essa conta. A conta precisa de existir em Authentication antes de receber o papel admin.
+
+## Passo 4 — publicar
+Activa GitHub Pages em Settings → Pages e escolhe GitHub Actions; depois confirma que o workflow termina sem erros em Actions. O site tem de estar servido por HTTPS.
+
+## Limitações desta etapa
+- O painel já está preparado para guardar metadados no Supabase, mas só funciona depois de configurares URL, chave e conta admin.
+- O link de reprodução é apenas um campo de catálogo: player protegido, uploads de ficheiros, gestão de clientes, pagamentos e assinaturas são etapas seguintes.
+- Distribui apenas conteúdos próprios ou licenciados.
