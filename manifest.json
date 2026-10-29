@@ -1,0 +1,12 @@
+{
+  "name": "TV Nkembo",
+  "short_name": "Nkembo TV",
+  "description": "TV Nkembo — plataforma de entretenimento digital",
+  "lang": "pt-AO",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#090b13",
+  "theme_color": "#090b13",
+  "icons": []
+}
